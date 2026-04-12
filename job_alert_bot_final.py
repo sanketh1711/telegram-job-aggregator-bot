@@ -6,6 +6,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 from subscription_checker import is_user_subscribed
 from job_scraper import job_scraper
+from keep_alive import keep_alive
 
 # Import our database functions
 from database.init_db import (
@@ -695,4 +696,5 @@ def main():
     application.run_polling()
 
 if __name__ == '__main__':
+    keep_alive()  # <-- Add this line
     main()

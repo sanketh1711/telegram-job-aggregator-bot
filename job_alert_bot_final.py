@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 from subscription_checker import is_user_subscribed
-from job_scraper import job_scraper
+from job_scraper import job_scraper, strip_html_tags
 from keep_alive import keep_alive
 
 # Import our database functions
@@ -458,7 +458,7 @@ async def show_job(query, jobs, job_index):
 👤 Level: {job.get('level', 'N/A')}
 
 📝 Description:
-{job.get('description', 'No description available')}
+{strip_html_tags(job.get('description', 'No description available'))}
 
 🔗 [Apply Here]({job.get('url', '#')})
         """

@@ -5,8 +5,27 @@ from typing import List, Dict
 import json
 from bs4 import BeautifulSoup
 import time
+import re
 
 logger = logging.getLogger(__name__)
+
+def strip_html_tags(text: str) -> str:
+    """Strip HTML tags and decode HTML entities from text"""
+    if not text:
+        return ""
+    # Remove HTML tags
+    clean = re.compile('<.*?>')
+    text = re.sub(clean, '', text)
+    # Decode common HTML entities
+    text = text.replace('&nbsp;', ' ')
+    text = text.replace('&amp;', '&')
+    text = text.replace('&lt;', '<')
+    text = text.replace('&gt;', '>')
+    text = text.replace('&quot;', '"')
+    text = text.replace('&#39;', "'")
+    # Remove extra whitespace
+    text = ' '.join(text.split())
+    return text
 
 class JobScraper:
     """Scrape jobs from multiple platforms"""
@@ -61,7 +80,7 @@ class JobScraper:
                                     "location": job.get("location", "Remote"),
                                     "type": "Remote",
                                     "url": job.get("url", ""),
-                                    "description": job.get("description", "No description")[:150] + "...",
+                                    "description": strip_html_tags(job.get("description", "No description"))[:150] + "...",
                                     "source": "RemoteOK",
                                     "category": "Technology",
                                     "tags": job.get("tags", [])
